@@ -1,5 +1,5 @@
--password: Test@123
+- password: Test@123
 
--user: root
+- user: root
 
--databasename: bankappdb
+- databasename: bankappdb
