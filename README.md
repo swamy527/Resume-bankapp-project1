@@ -1,4 +1,4 @@
-## Jave jar Mysql 
+## Java jar Mysql 
 
 - password: Test@123
 
