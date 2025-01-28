@@ -15,16 +15,16 @@ spec:
       labels:
         app: mysql
     spec:
-      volumes:
-      - name: mysql-storage
-        persistentVolumeClaim:
-          claimName: my-volume-claim
+      # volumes:
+      # - name: mysql-storage
+      #   persistentVolumeClaim:
+      #     claimName: my-volume-claim
       containers:
       - image: mysql:8
         name: mysql
-        volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
+        # volumeMounts:
+        # - name: mysql-storage
+        #   mountPath: /var/lib/mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
