@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankapp-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankapp
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: bankapp
+        version: blue
+    spec:
+      containers:
+      - name: bankapp
+        image: dockerswaha/bankapp:1.0.0 # Adjust the image tag for the blue version
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql-service:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+                name: my-secret
+                key: username  
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: my-secret
+              key: password
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "500m"
+          limits:
+            memory: "1000Mi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankapp-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: bankapp
+    version: blue 
