@@ -65,31 +65,32 @@ pipeline {
                 }
             }
         }
-        stage('Deploy MySQL Deployment and Service') {
+        stage('Deploy pvc and secret') {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: 'roboshop', contextName: '', credentialsId: 'kube-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://8F846A0C0EFD6AF532D16636CADFCBE4.gr7.us-east-1.eks.amazonaws.com') {
-                        sh "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  // Ensure you have the MySQL deployment YAML ready
+                        sh """kubectl apply -f secret.yaml -n ${KUBE_NAMESPACE}
+                              kubectl apply -f pvc.yaml -n ${KUBE_NAMESPACE}
+                           """   
                     }
                 }
             }
         }
-        stage('Deploy SVC-APP') {
+        stage('Deploy Bankapp and mysql') {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: 'roboshop', contextName: '', credentialsId: 'kube-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://8F846A0C0EFD6AF532D16636CADFCBE4.gr7.us-east-1.eks.amazonaws.com') {
-                         sh """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
-                                kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
-                              fi
+                         sh """ kubectl apply -f mysql.yaml -n ${KUBE_NAMESPACE}
+                                kubectl apply -f bankapp.yml -n ${KUBE_NAMESPACE}
                         """
                     }
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy Ingress') {
             steps {
                     withKubeConfig(caCertificate: '', clusterName: 'roboshop', contextName: '', credentialsId: 'kube-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://8F846A0C0EFD6AF532D16636CADFCBE4.gr7.us-east-1.eks.amazonaws.com') {
-                        sh "kubectl apply -f ${deploymentFile} -n ${KUBE_NAMESPACE}"
+                        sh "kubectl apply -f ingress.yaml -n ${KUBE_NAMESPACE}"
                     }
                 }
             }
