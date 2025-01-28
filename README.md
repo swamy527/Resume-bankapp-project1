@@ -1,6 +1,7 @@
 ## Java jar Mysql 
 
 SPRING_DATASOURCE_URL
+
 "jdbc:mysql://mysql-service:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
 
 
