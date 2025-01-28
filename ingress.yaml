@@ -8,7 +8,8 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-  - http: "beesh.life"
+  - host: "beesh.life"
+    http: 
       paths:
       - path: /
         pathType: Prefix
