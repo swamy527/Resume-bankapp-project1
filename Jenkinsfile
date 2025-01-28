@@ -44,10 +44,10 @@ pipeline {
                 sh "mvn package"
             }
         }
-        stage('publish to nexus') {
+        stage('publish artifact to nexus') {
             steps {
                 withMaven(globalMavenSettingsConfig: 'maven-settings', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
-                   sh "mvn deploy -Dmaven.test.skip=true"
+                   sh "mvn deploy"
                 }
             }
         }
@@ -56,7 +56,7 @@ pipeline {
                 sh "docker build -t dockerswaha/bankapp:1.0.0 ."
             }
         }
-        stage('publish-artifact') {
+        stage('push image to dockerhub') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
